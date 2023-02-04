@@ -31,18 +31,24 @@ def extract(
     top_p: float = 1,
     frequency_penalty: float = 0.5,
     presence_penalty: float = 0,
+    openai_api_key: str = config.OPENAI_API_KEY,
 ) -> list:
     """Extract keywords from a job description."""
-    openai.api_key = config.OPENAI_API_KEY
-    response = openai.Completion.create(
-        model=model,
-        prompt="Extract keywords from the following text:\n\n" + text,
-        temperature=temperature,
-        max_tokens=max_tokens,
-        top_p=top_p,
-        frequency_penalty=frequency_penalty,
-        presence_penalty=presence_penalty,
-    )
-    print(response["choices"][0]["text"])
+    openai.api_key = openai_api_key
+    if openai_api_key == "":
+        raise Exception("No OpenAI API key provided.")
+    try:
+        response = openai.Completion.create(
+            model=model,
+            prompt="Extract keywords what is expected from candidate from the following job "
+                   "description and return it as a list with comma separation:\n\n" + text,
+            temperature=temperature,
+            max_tokens=max_tokens,
+            top_p=top_p,
+            frequency_penalty=frequency_penalty,
+            presence_penalty=presence_penalty,
+        )
+    except Exception as e:
+        raise Exception(e)
     text_list = clean_openai_answer_to_list(response["choices"][0]["text"])
     return text_list

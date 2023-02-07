@@ -34,6 +34,30 @@ def extract(
     openai_api_key: str = config.OPENAI_API_KEY,
 ) -> list:
     """Extract keywords from a job description."""
+    default_values = {
+        "model": "text-davinci-003",
+        "temperature": 0.5,
+        "max_tokens": 150,
+        "top_p": 1,
+        "frequency_penalty": 0.5,
+        "presence_penalty": 0,
+        "openai_api_key": config.OPENAI_API_KEY,
+    }
+    if model is None:
+        model = default_values["model"]
+    if temperature is None:
+        temperature = default_values["temperature"]
+    if max_tokens is None:
+        max_tokens = default_values["max_tokens"]
+    if top_p is None:
+        top_p = default_values["top_p"]
+    if frequency_penalty is None:
+        frequency_penalty = default_values["frequency_penalty"]
+    if presence_penalty is None:
+        presence_penalty = default_values["presence_penalty"]
+    if openai_api_key is None:
+        openai_api_key = default_values["openai_api_key"]
+
     openai.api_key = openai_api_key
     if openai_api_key == "":
         raise Exception("No OpenAI API key provided.")

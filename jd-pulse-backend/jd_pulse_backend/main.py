@@ -23,10 +23,10 @@ async def extract_jd(
     openai_api_key: str | None = None,
 ) -> JSONResponse:
     try:
-        keywords = extraction.extract(text)
+        keywords = extraction.extract(text, model, temperature, max_tokens, top_p, frequency_penalty, presence_penalty, openai_api_key)
     except Exception as e:
         return JSONResponse(content={"error": str(e)})
-    return JSONResponse(content=keywords)
+    return JSONResponse(content={"keywords": keywords})
 
 
 def main():

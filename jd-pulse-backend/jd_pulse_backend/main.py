@@ -11,7 +11,7 @@ async def root():
     return {"message": "Hello World"}
 
 
-@app.get("/api/extract")
+@app.get("/api/get_keywords")
 async def extract_jd(
     text: str,
     model: str | None = None,

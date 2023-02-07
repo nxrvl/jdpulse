@@ -1,23 +1,9 @@
 <template>
   <div>
-    <!-- Modal -->
-    <div class="modal" tabindex="-1" role="dialog" v-if="showErrorModal">
-      <div class="modal-dialog" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title">Error</h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close" @click="showErrorModal = false">
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
-          <div class="modal-body">
-            <p>{{ errorMessage }}</p>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" @click="showErrorModal = false">Close</button>
-          </div>
-        </div>
-      </div>
+    <div>
+      <b-modal v-if="showErrorModal" title="Error" :show="showErrorModal">
+        {{ errorMessage }}
+      </b-modal>
     </div>
     <form @submit.prevent="submitHandler" >
       <div class="form-group">
@@ -63,11 +49,17 @@ export default {
     async submitHandler() {
       this.loading = true;
       try {
-        const response = await axios.get('http://localhost:8000/api/extract', {params: {text: this.inputValue}})
+        if (this.inputValue === '') {
+          this.errorMessage = 'Please enter a value';
+          this.showErrorModal = true;
+          this.loading = false;
+          return;
+        }
+        const response = await axios.get('/api/extract', {params: {text: this.inputValue}})
         if (response.data.error) {
-          console.log(response.data.error)
           this.errorMessage = response.data.error;
           this.showErrorModal = true;
+          this.loading = false;
         } else {
           this.apiResponse = response.data
           this.loading = false;
@@ -76,6 +68,9 @@ export default {
           (error) {
         console.error(error)
       }
+    },
+    closeModal() {
+      this.showErrorModal = false;
     },
 
     async copyToClipboard(item) {
@@ -88,7 +83,7 @@ export default {
           this.copiedItem = null;
         }, 200);
       });
-    }
+    },
   }
 }
 </script>

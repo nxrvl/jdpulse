@@ -3,16 +3,15 @@ from fastapi.responses import JSONResponse
 import extraction
 import uvicorn
 
-
 app = FastAPI()
 
 
-@app.get("/")
+@app.get("/api")
 async def root():
     return {"message": "Hello World"}
 
 
-@app.get("/extract")
+@app.get("/api/get_keywords")
 async def extract_jd(
     text: str,
     model: str | None = None,
@@ -21,8 +20,12 @@ async def extract_jd(
     top_p: float | None = None,
     frequency_penalty: float | None = None,
     presence_penalty: float | None = None,
+    openai_api_key: str | None = None,
 ) -> JSONResponse:
-    keywords = extraction.extract(text)
+    try:
+        keywords = extraction.extract(text)
+    except Exception as e:
+        return JSONResponse(content={"error": str(e)})
     return JSONResponse(content=keywords)
 
 

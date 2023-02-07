@@ -32,7 +32,7 @@ const GetKeywords: React.FC = () => {
     const [apiKey, setApiKey] = useState<string>('');
     const [jobDescription, setJobDescription] = useState<string>('');
     const [isLoading, setIsLoading] = useState<boolean>(false);
-    const [data, setData] = useState<Data>({ keywords: ['test', 'test1']});
+    const [data, setData] = useState<Data>({ keywords: []});
     const [isErrorModalOpen, setIsErrorModalOpen] = useState<boolean>(false);
     const [errorMessage, setErrorMessage] = useState<string>('');
     const [selectedKeyword, setSelectedKeyword] = useState<string | null>(null);
@@ -98,7 +98,11 @@ const GetKeywords: React.FC = () => {
                     {isLoading ? <Spinner /> : 'Get keywords'}
                 </Button>
             </Stack>
-            <Modal isOpen={isErrorModalOpen} onClose={() => setIsErrorModalOpen(false)}>
+            <Modal
+                size={'xl'}
+                blockScrollOnMount={true}
+                isOpen={isErrorModalOpen}
+                onClose={() => setIsErrorModalOpen(false)}>
                 <ModalOverlay />
                 <ModalContent>
                     <ModalHeader>Oops!</ModalHeader>
@@ -136,7 +140,6 @@ const GetKeywords: React.FC = () => {
                                 _hover={{
                                     bg: 'twitter.400',
                                 }}
-                                _
                                 >
                                     {keyword}
                             </Tag>
